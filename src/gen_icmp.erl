@@ -192,7 +192,12 @@ ping(Socket, Hosts, Options) when is_pid(Socket), is_list(Hosts), is_list(Option
             Errors;
         _ ->
             [ spawn(fun() ->
-                            gen_icmp:send(Socket, Addr, gen_icmp:echo(Family, Id, S, Data))
+                            case gen_icmp:send(Socket, Addr, gen_icmp:echo(Family, Id, S, Data)) of 
+				    ok -> 
+					nothing_todo;
+				    Reason ->
+					error_logger:info_msg("Failed to send icmp due to ~p~n", [Reason])
+			    end			   
                     end) || {ok, _Host, Addr, S} <- Addresses ],
             {Timeouts, Replies} = ping_reply(Addresses, #ping_opt{
                                              s = Socket,
