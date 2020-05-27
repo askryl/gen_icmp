@@ -196,7 +196,7 @@ ping(Socket, Hosts, Options) when is_pid(Socket), is_list(Hosts), is_list(Option
 				    ok -> 
 					nothing_todo;
 				    Reason ->
-					error_logger:info_msg("Failed to send icmp due to ~p~n", [Reason])
+					error_logger:error_msg("Failed to send icmp due to ~p~n", [Reason])
 			    end			   
                     end) || {ok, _Host, Addr, S} <- Addresses ],
             {Timeouts, Replies} = ping_reply(Addresses, #ping_opt{
